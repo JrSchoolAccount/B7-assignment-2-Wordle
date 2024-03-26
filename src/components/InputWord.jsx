@@ -10,6 +10,7 @@ export default function InputWord({ onGuessWord }) {
             onGuessWord(text);
         }}>
       <input
+      minLength={5}
       maxLength={5}
       type='text'
       value={text}
