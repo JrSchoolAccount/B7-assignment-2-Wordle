@@ -6,7 +6,7 @@ function StartScreen({ onStartGame }) {
   const [playerName, setPlayerName] = useState('');
 
   const handleStart = () => {
-    onStartGame(wordLength, includeDoubleLetters, playerName);
+    onStartGame(wordLength, includeDoubleLetters);
   };
 
   return (
@@ -26,10 +26,6 @@ function StartScreen({ onStartGame }) {
         <div>
           <label htmlFor="doubleLetters">Include double letter words:</label>
           <input id="doubleLetters" type="checkbox" checked={includeDoubleLetters} onChange={(e) => setIncludeDoubleLetters(e.target.checked)} />
-        </div>
-        <div>
-          <label htmlFor="playerName">Enter your name:</label>
-          <input id="playerName" type="text" value={playerName} onChange={(e) => setPlayerName(e.target.value)} />
         </div>
         <button type="submit">Start Game</button>
       </form>
