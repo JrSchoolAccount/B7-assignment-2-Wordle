@@ -1,1 +1,1 @@
-# Wordle-type game with high score
+# Frontend for Wordle app
