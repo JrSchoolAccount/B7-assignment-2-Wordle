@@ -1,1 +1,1 @@
-# Wordle-type App Fullstack Project
+# Fullstack Wordle-type App Project
