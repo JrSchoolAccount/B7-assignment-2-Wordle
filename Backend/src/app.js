@@ -1,6 +1,5 @@
 import express from 'express';
-import fs from 'fs-promises';
-import compareWords from './compareWords';
+import compareWords from './compareWords.js';
 
 const app = express();
 app.use(express.json());
@@ -24,3 +23,5 @@ app.post('/api/compare', (req, res) => {
 app.get('/api/high-score', (req, res) => {});
 
 app.post('/api/high-score', (req, res) => {});
+
+export default app;

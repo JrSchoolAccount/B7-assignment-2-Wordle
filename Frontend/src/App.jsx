@@ -8,32 +8,26 @@ function App() {
   const [ word, setWord ] = useState('');
   const [ gameStarted, setGameStarted ] = useState(false);
   const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
-  const [selectedWord, setSelectedWord ] = useState('');
+  const [wordLength, setWordLength] = useState(5);
 
   function handleGuess(newGuess) {
    setWord(newGuess);
   }
 
-  const handleStartGame = (length, doubleLetters, name) => {
+  const handleStartGame = (length, doubleLetters) => {
     setWordLength(length);
-    setIncludeDoubleLetters(doubleLetters);
-    const word = chooseWord(wordList, length, doubleLetters);
-    setSelectedWord(word);
+    setDoubleLetters(doubleLetters);
     setGameStarted(true);
   };
-
-  const wordList = ['apple', 'banana', 'orange', 'grape', 'pear'];
 
   return (
     <div className='bg-black min-h-screen text-white'>
       {!gameStarted ? (
-        <StartScreen onStartGame={handleStartGame} />
+        <StartScreen
+        onStartGame={handleStartGame}
+        setWordLength={setWordLength} />
       ) : (
         <>
-        <ChooseWord
-        wordList={wordLength}
-        uniqueLetters={includeDoubleLetters}
-         />
       <InputWord onGuessWord={handleGuess} />
       <div className='flex justify-center'>
       <WordAnswer guessedWord={word} />
