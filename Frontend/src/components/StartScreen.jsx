@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 function StartScreen({ onStartGame }) {
   const [wordLength, setWordLength] = useState(5);
   const [includeDoubleLetters, setIncludeDoubleLetters] = useState(false);
-  const [playerName, setPlayerName] = useState('');
 
   const handleStart = () => {
     onStartGame(wordLength, includeDoubleLetters);
