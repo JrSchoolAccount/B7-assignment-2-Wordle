@@ -20,6 +20,8 @@ app.post('/api/compare', (req, res) => {
   res.json({ result: comparisonResult });
 });
 
+app.get('/api/choose-word', (req, res) => {});
+
 app.get('/api/high-score', (req, res) => {});
 
 app.post('/api/high-score', (req, res) => {});
