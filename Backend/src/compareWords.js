@@ -12,6 +12,20 @@ function checkLetter(letter, correctWordArray, checkedLetters) {
   return 'incorrect';
 }
 
+function checkDuplicateLetters(results) {
+  results.forEach((item) => {
+    if (item.result === 'misplaced') {
+      const foundDuplicateLetters = results.filter(
+        (result) => result.letter === item.letter && result.result === 'correct'
+      );
+
+      if (foundDuplicateLetters.length > 0) {
+        item.result = 'incorrect';
+      }
+    }
+  });
+}
+
 export default function compareWords(guess, correctWord) {
   const wordArray = splitStringToArray(guess);
   const correctWordArray = splitStringToArray(correctWord);
@@ -21,8 +35,11 @@ export default function compareWords(guess, correctWord) {
   wordArray.forEach((letter, index) => {
     const correctLetter = correctWordArray[index];
     const resultValue = letter === correctLetter ? 'correct' : checkLetter(letter, correctWordArray, checkedLetters);
+
     result.push({ letter, result: resultValue });
   });
+
+  checkDuplicateLetters(result);
 
   return result;
 }

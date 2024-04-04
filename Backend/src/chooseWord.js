@@ -27,7 +27,7 @@ function wordRandomizer(array) {
   return array[randomIndex];
 }
 
-export default function chooseWord(wordArray, wordLength, uniqueLetters) {
+export default function chooseWord({ wordArray, wordLength, uniqueLetters }) {
   const filteredByLength = filterWordsByLength(wordArray, wordLength);
 
   const filteredByUniqueLetters = filterWordsByUniqueLetters(filteredByLength, uniqueLetters);
