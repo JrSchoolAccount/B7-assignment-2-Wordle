@@ -34,5 +34,7 @@ export default function chooseWord({ wordArray, wordLength, uniqueLetters }) {
 
   const randomWord = wordRandomizer(filteredByUniqueLetters);
 
-  return randomWord || 'No word available, try again';
+  const lowercaseRandomWord = randomWord ? randomWord.toLowerCase() : null;
+
+  return lowercaseRandomWord || 'No word available, try again';
 }

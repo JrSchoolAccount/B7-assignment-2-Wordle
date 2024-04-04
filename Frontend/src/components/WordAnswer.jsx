@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import compareWords from './CompareWords';
 
-export default function WordAnswer({ guessedWord }) {
+export default function WordAnswer({ guessedWord, randomWord }) {
   const [comparisonResult, setComparisonResult] = useState([]);
 
   useEffect(() => {
-    
-    const result = compareWords(guessedWord, 'cykla');
 
-    setComparisonResult(result);
+    const data = {
+      guess: guessedWord,
+      correctWord: randomWord
+    };
+
+    fetch('/api/compare', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+
+        setComparisonResult(data.result);
+      })
+      .catch(error => {
+        console.error('Error fetching comparison result:', error);
+      });
   }, [guessedWord]);
 
   const resultElements = comparisonResult.map((item, index) => (
