@@ -38,7 +38,7 @@ function App() {
         setWordLength={setWordLength} />
       ) : (
         <>
-      <InputWord onGuessWord={handleGuess} />
+      <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
       <div className='flex justify-center'>
       <WordAnswer guessedWord={word} randomWord={randomWord} />
       </div>
