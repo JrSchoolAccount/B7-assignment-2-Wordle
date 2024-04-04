@@ -4,14 +4,15 @@ function StartScreen({ onStartGame }) {
   const [wordLength, setWordLength] = useState(5);
   const [includeDoubleLetters, setIncludeDoubleLetters] = useState(false);
 
-  const handleStart = () => {
+  const handleStart = (e) => {
+    e.preventDefault();
     onStartGame(wordLength, includeDoubleLetters);
   };
 
   return (
     <div className="start-screen">
       <h2>Wordle-Clone</h2>
-      <form onSubmit={(e) => { e.preventDefault(); handleStart(); }}>
+      <form onSubmit={handleStart}>
         <div>
           <label htmlFor="wordLength">Select word length:</label>
           <select id="wordLength" value={wordLength} onChange={(e) => setWordLength(parseInt(e.target.value))}>

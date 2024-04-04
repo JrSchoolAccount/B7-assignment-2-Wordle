@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-export default function WordAnswer({ guessedWord }) {
+export default function WordAnswer({ guessedWord, randomWord }) {
   const [comparisonResult, setComparisonResult] = useState([]);
 
   useEffect(() => {
 
     const data = {
       guess: guessedWord,
-      correctWord: 'cykla'
+      correctWord: randomWord
     };
 
     fetch('/api/compare', {
