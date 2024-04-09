@@ -31,8 +31,12 @@ function App() {
   .catch(error => {
     console.error('Error fetching random word:', error);
   });
+};
 
-  
+const handleGameOver = () => {
+  if (correctGuess) {
+    setGameOver(true);
+  }
 };
 
   return (
@@ -47,7 +51,7 @@ function App() {
             <>
               <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
               <div className='flex justify-center'>
-                <WordAnswer guessedWord={word} randomWord={randomWord} setCorrectGuess={setCorrectGuess} />
+                <WordAnswer guessedWord={word} randomWord={randomWord} setCorrectGuess={setCorrectGuess} onCorrectGuess={handleGameOver} />
               </div>
             </>
           )}

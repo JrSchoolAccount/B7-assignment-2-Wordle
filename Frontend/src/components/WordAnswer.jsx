@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function WordAnswer({ guessedWord, randomWord, setCorrectGuess }) {
+export default function WordAnswer({ guessedWord, randomWord, setCorrectGuess, onCorrectGuess }) {
   const [guesses, setGuesses] = useState([]);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ export default function WordAnswer({ guessedWord, randomWord, setCorrectGuess })
       setGuesses(prevResults => [data.result, ...prevResults]);
       if ( data.result.every(item => item.result === 'correct')) {
         setCorrectGuess(true);
+        onCorrectGuess();
       }
     })
     .catch(error => {
