@@ -12,6 +12,7 @@ function App() {
   const [ randomWord, setRandomWord ] = useState('');
   const [ guesses, setGuesses ] = useState([]);
   const [ gameOver, setGameOver ] = useState(false);
+  const [ correctGuess, setCorrectGuess ] = useState(false);
 
   function handleGuess(newGuess) {
    setWord(newGuess);
@@ -46,7 +47,7 @@ function App() {
             <>
               <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
               <div className='flex justify-center'>
-                <WordAnswer guessedWord={word} randomWord={randomWord} />
+                <WordAnswer guessedWord={word} randomWord={randomWord} setCorrectGuess={setCorrectGuess} />
               </div>
             </>
           )}

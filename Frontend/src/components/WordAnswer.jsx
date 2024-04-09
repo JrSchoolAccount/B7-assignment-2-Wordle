@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function WordAnswer({ guessedWord, randomWord }) {
+export default function WordAnswer({ guessedWord, randomWord, setCorrectGuess }) {
   const [guesses, setGuesses] = useState([]);
 
   useEffect(() => {
@@ -19,6 +19,9 @@ export default function WordAnswer({ guessedWord, randomWord }) {
     .then(response => response.json())
     .then(data => {
       setGuesses(prevResults => [data.result, ...prevResults]);
+      if ( data.result.every(item => item.result === 'correct')) {
+        setCorrectGuess(true);
+      }
     })
     .catch(error => {
       console.error('Error fetching comparison result:', error);
