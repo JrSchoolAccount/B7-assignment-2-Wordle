@@ -2,9 +2,17 @@ import express from 'express';
 import fs from 'fs/promises';
 import compareWords from './compareWords.js';
 import chooseWord from './chooseWord.js';
+import mongoose from 'mongoose';
+
+mongoose.connect(process.env.DB_URL || 'mongodb://localhost/27017/test');
 
 const app = express();
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(req.method, req.path);
+  next();
+});
 
 app.get('/', (req, res) => {});
 
