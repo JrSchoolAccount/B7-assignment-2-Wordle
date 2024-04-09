@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function WordAnswer({ guessedWord, randomWord }) {
-  const [comparisonResults, setComparisonResults] = useState([]);
+  const [guesses, setGuesses] = useState([]);
 
   useEffect(() => {
     const data = {
@@ -18,7 +18,7 @@ export default function WordAnswer({ guessedWord, randomWord }) {
     })
     .then(response => response.json())
     .then(data => {
-      setComparisonResults(prevResults => [data.result, ...prevResults]);
+      setGuesses(prevResults => [data.result, ...prevResults]);
     })
     .catch(error => {
       console.error('Error fetching comparison result:', error);
@@ -28,7 +28,7 @@ export default function WordAnswer({ guessedWord, randomWord }) {
   return (
     <div className="Game">
       <ul>
-        {comparisonResults.map((result, index) => (
+        {guesses.map((result, index) => (
           <li key={index}>
             <div className="flex flex-row">
               {result.map((item, i) => (
