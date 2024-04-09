@@ -10,6 +10,9 @@ function App() {
   const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
   const [ wordLength, setWordLength ] = useState(5);
   const [ randomWord, setRandomWord ] = useState('');
+  const [ guesses, setGuesses ] = useState([]);
+  const [ gameOver, setGameOver ] = useState(false);
+  const [ correctGuess, setCorrectGuess ] = useState(false);
 
   function handleGuess(newGuess) {
    setWord(newGuess);
@@ -30,6 +33,12 @@ function App() {
   });
 };
 
+const handleGameOver = () => {
+  if (correctGuess) {
+    setGameOver(true);
+  }
+};
+
   return (
     <div className='bg-black min-h-screen text-white'>
       {!gameStarted ? (
@@ -38,11 +47,28 @@ function App() {
         setWordLength={setWordLength} />
       ) : (
         <>
-      <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
-      <div className='flex justify-center'>
-      <WordAnswer guessedWord={word} randomWord={randomWord} />
-      </div>
-      </>
+          {!gameOver && (
+            <>
+              <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
+              <div className='flex justify-center'>
+                <WordAnswer guessedWord={word} randomWord={randomWord} setCorrectGuess={setCorrectGuess} onCorrectGuess={handleGameOver} />
+              </div>
+            </>
+          )}
+          {gameOver && (
+            <div className='Game'>
+              <h1>You won!</h1>
+              <p>The correct word was </p>
+              <p>Guesses: </p>
+              <p>Duration: </p>
+              <h2>Add to highscore</h2>
+              <form>
+                <input placeholder='Your name' />
+                <input type='submit' />
+              </form>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
