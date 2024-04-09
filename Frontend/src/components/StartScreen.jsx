@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function StartScreen({ onStartGame }) {
+export default function StartScreen({ onStartGame }) {
   const [wordLength, setWordLength] = useState(5);
   const [includeDoubleLetters, setIncludeDoubleLetters] = useState(false);
 
@@ -32,5 +32,3 @@ function StartScreen({ onStartGame }) {
     </div>
   );
 }
-
-export default StartScreen;
