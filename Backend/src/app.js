@@ -3,8 +3,9 @@ import fs from 'fs/promises';
 import compareWords from './compareWords.js';
 import chooseWord from './chooseWord.js';
 import mongoose from 'mongoose';
+import { HighScore } from './models.js';
 
-mongoose.connect(process.env.DB_URL || 'mongodb://localhost/27017/test');
+mongoose.connect(process.env.DB_URL || 'mongodb://127.0.0.1:27017/test');
 
 const app = express();
 app.use(express.json());
@@ -46,7 +47,11 @@ app.get('/api/choose-word', async (req, res) => {
   }
 });
 
-app.get('/api/high-score', (req, res) => {});
+app.get('/api/high-score', async (req, res) => {
+  const highScores = await HighScore.find();
+
+  res.json({ highScores });
+});
 
 app.post('/api/high-score', (req, res) => {});
 

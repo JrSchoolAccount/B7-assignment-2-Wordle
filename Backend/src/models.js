@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const PlayerScore = mongoose.model('PlayerScore', {
+const HighScore = mongoose.model('HighScore', {
   name: String,
   time: Number,
   guesses: Number,
@@ -8,4 +8,4 @@ const PlayerScore = mongoose.model('PlayerScore', {
   unique: Boolean,
 });
 
-export { PlayerScore };
+export { HighScore };
