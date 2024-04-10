@@ -19,7 +19,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {});
+app.get('/', async (req, res) => {
+  const html = await fs.readFile('../frontend/dist/index.html');
+
+  res.type('html').send(html);
+});
 
 app.get('/high-score', async (req, res) => {
   const highScores = await HighScore.find();
@@ -44,7 +48,7 @@ app.get('/api/choose-word', async (req, res) => {
 
   try {
     const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
-    const wordArray = wordList.split('\n');
+    const wordArray = wordList.split('\r\n');
 
     const word = chooseWord({ wordArray, wordLength: parseInt(wordLength), uniqueLetters: uniqueLetters === 'true' });
 
@@ -62,5 +66,7 @@ app.get('/api/high-score', async (req, res) => {
 });
 
 app.post('/api/high-score', (req, res) => {});
+
+app.use('/assets', express.static('../frontend/dist/assets'));
 
 export default app;
