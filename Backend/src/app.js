@@ -3,12 +3,16 @@ import fs from 'fs/promises';
 import compareWords from './compareWords.js';
 import chooseWord from './chooseWord.js';
 import mongoose from 'mongoose';
+import ejs from 'ejs';
 import { HighScore } from './models.js';
 
-mongoose.connect(process.env.DB_URL || 'mongodb://127.0.0.1:27017/test');
+mongoose.connect(process.env.DB_URL || 'mongodb://localhost:27017/test');
 
 const app = express();
 app.use(express.json());
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
 app.use((req, res, next) => {
   console.log(req.method, req.path);
@@ -17,7 +21,11 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {});
 
-app.get('/high-score', (req, res) => {});
+app.get('/high-score', async (req, res) => {
+  const highScores = await HighScore.find();
+
+  res.render('layout', { highScores });
+});
 
 app.get('/info', (req, res) => {});
 
