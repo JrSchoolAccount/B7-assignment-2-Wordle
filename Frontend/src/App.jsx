@@ -6,56 +6,54 @@ import StartScreen from './components/StartScreen';
 
 function App() {
   const [ word, setWord ] = useState('');
-  const [ gameStarted, setGameStarted ] = useState(false);
   const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
   const [ wordLength, setWordLength ] = useState(5);
-  const [ randomWord, setRandomWord ] = useState('');
-  const [ guesses, setGuesses ] = useState([]);
-  const [ gameOver, setGameOver ] = useState(false);
-  const [ correctGuess, setCorrectGuess ] = useState(false);
+  const [ gameState, setGameState ] = useState('');
+  const [ gameId, setGameId ] = useState(null);
 
   function handleGuess(newGuess) {
-   setWord(newGuess);
+  setWord(newGuess);
   }
 
-  const handleStartGame = (length, doubleLetters) => {
+  const handleStartGame = async (length, doubleLetters) => {
     setWordLength(length);
     setDoubleLetters(doubleLetters);
 
-    fetch(`/api/choose-word?wordLength=${length}&uniqueLetters=${doubleLetters}`).then(response => response.json()).then(data => {
+    try {
+      const res = await fetch(`/api/games?wordLength=${length}&uniqueLetters=${doubleLetters}`, {
+        method: "post",
+      });
+      const data = await res.json();
+      setGameId(data.id);
+      
+      setGameState('playing');
 
-    setRandomWord(data.word);
+    } catch (error) {
+      console.error('Error starting game:', error);
+    }
+  };
 
-    setGameStarted(true);
-  })
-  .catch(error => {
-    console.error('Error fetching random word:', error);
-  });
-};
-
-const handleGameOver = () => {
-  if (correctGuess) {
-    setGameOver(true);
-  }
+const handleGameWon = () => {
+    setGameState('won');
 };
 
   return (
     <div className='bg-black min-h-screen text-white'>
-      {!gameStarted ? (
+      {gameState === '' ? (
         <StartScreen
         onStartGame={handleStartGame}
         setWordLength={setWordLength} />
       ) : (
         <>
-          {!gameOver && (
+          {gameState === 'playing' && (
             <>
               <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
               <div className='flex justify-center'>
-                <WordAnswer guessedWord={word} randomWord={randomWord} setCorrectGuess={setCorrectGuess} onCorrectGuess={handleGameOver} />
+                <WordAnswer guessedWord={word} gameId={gameId} onCorrectGuess={handleGameWon} />
               </div>
             </>
           )}
-          {gameOver && (
+          {gameState === 'won' && (
             <div className='Game'>
               <h1>You won!</h1>
               <p>The correct word was </p>

@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-export default function wordList() {
+export default async function wordList() {
   try {
-    const data = fs.readFile('./src/wordList.txt', 'utf8');
+    const data = await fs.promises.readFile('./src/wordList.txt', 'utf8');
     const wordArray = data.split('\r\n');
 
     return wordArray;

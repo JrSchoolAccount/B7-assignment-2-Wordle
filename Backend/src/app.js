@@ -42,18 +42,19 @@ app.get('/info', (req, res) => {});
 // API Routes
 
 app.post('/api/games', async (req, res) => {
-  const { wordLength, uniqueLetters } = req.query;
-  const words = await wordList();
+  const wordLength = parseInt(req.query.wordLength);
+  const uniqueLetters = req.query.uniqueLetters === 'true';
+  const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
+  const wordArray = wordList.split('\r\n');
 
   const game = {
-    correctWord: chooseWord({ words, wordLength: parseInt(wordLength), uniqueLetters: uniqueLetters === 'true' }),
+    correctWord: chooseWord(wordArray, wordLength, uniqueLetters),
     guesses: [],
     id: uuid.v4(),
     startTime: new Date(),
   };
 
   GAMES.push(game);
-
   res.status(201).json({ id: game.id });
 });
 
@@ -61,9 +62,8 @@ app.post('/api/games/:id/guesses', (req, res) => {
   const game = GAMES.find((savedGame) => savedGame.id == req.params.id);
   if (game) {
     const guess = req.body.guess;
-    game.guesses.push(guess);
-
     const compare = compareWords(guess, game.correctWord);
+    game.guesses.push(compare);
 
     const correct = correctWord(compare);
 
@@ -72,13 +72,14 @@ app.post('/api/games/:id/guesses', (req, res) => {
 
       res.status(201).json({
         guesses: game.guesses,
-        result,
-        game,
+        result: game,
+        compare: compare,
         correct: true,
       });
     } else {
       res.status(201).json({
         guesses: game.guesses,
+        compare: compare,
         correct: false,
       });
     }
