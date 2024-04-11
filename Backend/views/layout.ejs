@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>High-Score</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="container mx-auto">
+      <h1 class="text-3xl font-bold text-center my-8">High-Score</h1>
+      <div class="grid grid-cols-3 gap-4">
+        <% highScores.forEach(highScore => { %>
+        <div class="bg-gray-200 p-4 rounded-md">
+          <p class="font-semibold">Name: <%= highScore.name %></p>
+          <p>Time: <%= highScore.time %></p>
+          <p>Guesses: <%= highScore.guesses %></p>
+          <p>Word Length: <%= highScore.wordLength %></p>
+          <p>Unique: <%= highScore.unique %></p>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </body>
+</html>
