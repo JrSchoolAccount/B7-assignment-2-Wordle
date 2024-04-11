@@ -1,7 +1,13 @@
 import express from 'express';
 import fs from 'fs/promises';
+import * as uuid from 'uuid';
+
 import compareWords from './compareWords.js';
 import chooseWord from './chooseWord.js';
+import wordList from './wordList.js';
+import correctWord from './correctWord.js';
+
+const GAMES = [];
 
 const app = express();
 app.use(express.json());
@@ -14,27 +20,49 @@ app.get('/info', (req, res) => {});
 
 // API Routes
 
-app.post('/api/compare', (req, res) => {
-  const { guess, correctWord } = req.body;
+app.post('/api/games', async (req, res) => {
+  const { wordLength, uniqueLetters } = req.query;
+  const words = await wordList();
 
-  const comparisonResult = compareWords(guess, correctWord);
+  const game = {
+    correctWord: chooseWord({ words, wordLength: parseInt(wordLength), uniqueLetters: uniqueLetters === 'true' }),
+    guesses: [],
+    id: uuid.v4(),
+    startTime: new Date(),
+  };
 
-  res.json({ result: comparisonResult });
+  GAMES.push(game);
+
+  res.status(201).json({ id: game.id });
 });
 
-app.get('/api/choose-word', async (req, res) => {
-  const { wordLength, uniqueLetters } = req.query;
+app.post('/api/games/:id/guesses', (req, res) => {
+  const game = GAMES.find((savedGame) => savedGame.id == req.params.id);
+  if (game) {
+    const guess = req.body.guess;
+    game.guesses.push(guess);
 
-  try {
-    const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
-    const wordArray = wordList.split('\n');
+    const compare = compareWords(guess, game.correctWord);
 
-    const word = chooseWord({ wordArray, wordLength: parseInt(wordLength), uniqueLetters: uniqueLetters === 'true' });
+    const correct = correctWord(compare);
 
-    res.json({ word });
-  } catch (error) {
-    console.error('Error reading word list file:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    if (correct) {
+      game.endTime = new Date();
+
+      res.status(201).json({
+        guesses: game.guesses,
+        result,
+        game,
+        correct: true,
+      });
+    } else {
+      res.status(201).json({
+        guesses: game.guesses,
+        correct: false,
+      });
+    }
+  } else {
+    res.status(404).end();
   }
 });
 
