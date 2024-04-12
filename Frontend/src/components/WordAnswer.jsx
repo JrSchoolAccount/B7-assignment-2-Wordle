@@ -15,9 +15,9 @@ export default function WordAnswer({ guessedWord , gameId, onCorrectGuess }) {
 
       const data = await res.json();
       
-      setGuesses(prevGuess => [data.compare, ...prevGuess]);
+      setGuesses(prevGuess => [data.correctWord, ...prevGuess]);
       
-      if (data.compare.length > 0 && data.compare.every(item => item.result === 'correct')){
+      if (data.guesses.length > 0 && data.correct){
         onCorrectGuess();
       }
     };

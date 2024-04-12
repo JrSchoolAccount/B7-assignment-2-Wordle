@@ -54,7 +54,7 @@ const handleGameWon = () => {
             </>
           )}
           {gameState === 'won' && (
-            <div className='Game'>
+            <div>
               <h1>You won!</h1>
               <p>The correct word was </p>
               <p>Guesses: </p>

@@ -54,6 +54,8 @@ app.post('/api/games', async (req, res) => {
     startTime: new Date(),
   };
 
+  console.log(game); // remove this after development <--------------------
+
   GAMES.push(game);
   res.status(201).json({ id: game.id });
 });
@@ -63,24 +65,24 @@ app.post('/api/games/:id/guesses', (req, res) => {
   if (game) {
     const guess = req.body.guess;
     const compare = compareWords(guess, game.correctWord);
-    game.guesses.push(compare);
+    game.guesses.push(guess);
 
     const correct = correctWord(compare);
 
-    if (correct) {
+    if (correct && compare.length > 0) {
       game.endTime = new Date();
 
       res.status(201).json({
         guesses: game.guesses,
         result: game,
-        compare: compare,
         correct: true,
+        correctWord: compare,
       });
     } else {
       res.status(201).json({
         guesses: game.guesses,
-        compare: compare,
         correct: false,
+        correctWord: compare,
       });
     }
   } else {
