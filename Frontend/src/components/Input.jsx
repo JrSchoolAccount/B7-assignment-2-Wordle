@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function InputWord({ onGuessWord, wordLength }) {
+export default function Input({ onGuessWord, wordLength }) {
     const [text, setText] = useState('');
     return (
     <div className='m-5 w-1/2 md:w-64 mx-auto '>

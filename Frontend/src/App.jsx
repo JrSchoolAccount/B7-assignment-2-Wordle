@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import './App.css'
-import InputWord from './components/InputWord';
-import WordAnswer from './components/WordAnswer';
+import Input from './components/Input';
+import Game from './components/Game';
 import StartScreen from './components/StartScreen';
 
 function App() {
   const [ word, setWord ] = useState('');
   const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
   const [ wordLength, setWordLength ] = useState(5);
-  const [ gameState, setGameState ] = useState('');
+  const [ gameState, setGameState ] = useState('notPlaying');
   const [ gameId, setGameId ] = useState(null);
 
   function handleGuess(newGuess) {
@@ -33,13 +33,13 @@ function App() {
     }
   };
 
-const handleGameWon = () => {
-    setGameState('won');
+const handleGameOver = () => {
+    setGameState('notPlaying');
 };
 
   return (
     <div className='bg-black min-h-screen text-white'>
-      {gameState === '' ? (
+      {gameState === 'notPlaying' ? (
         <StartScreen
         onStartGame={handleStartGame}
         setWordLength={setWordLength} />
@@ -47,25 +47,13 @@ const handleGameWon = () => {
         <>
           {gameState === 'playing' && (
             <>
-              <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
+              <Input onGuessWord={handleGuess} wordLength={wordLength} />
               <div className='flex justify-center'>
-                <WordAnswer guessedWord={word} gameId={gameId} onCorrectGuess={handleGameWon} />
+                <Game guessedWord={word} gameId={gameId} onCorrectGuess={handleGameOver} />
               </div>
             </>
           )}
-          {gameState === 'won' && (
-            <div>
-              <h1>You won!</h1>
-              <p>The correct word was </p>
-              <p>Guesses: </p>
-              <p>Duration: </p>
-              <h2>Add to highscore</h2>
-              <form>
-                <input placeholder='Your name' />
-                <input type='submit' />
-              </form>
-            </div>
-          )}
+          
         </>
       )}
     </div>
