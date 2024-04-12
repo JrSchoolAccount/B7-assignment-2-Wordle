@@ -1,36 +1,32 @@
 import React, { useState, useEffect } from 'react';
 
-export default function WordAnswer({ guessedWord, randomWord, setCorrectGuess, onCorrectGuess }) {
+export default function WordAnswer({ guessedWord , gameId, onCorrectGuess }) {
   const [guesses, setGuesses] = useState([]);
 
-  useEffect(() => {
-    const data = {
-      guess: guessedWord,
-      correctWord: randomWord
-    };
+  useEffect( () => {
+    const fetchData = async () => {
+      const res = await fetch(`/api/games/${gameId}/guesses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({guess: guessedWord})
+      });
 
-    fetch('/api/compare', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      setGuesses(prevResults => [data.result, ...prevResults]);
-      if ( data.result.every(item => item.result === 'correct')) {
-        setCorrectGuess(true);
+      const data = await res.json();
+      
+      setGuesses(prevGuess => [data.correctWord, ...prevGuess]);
+      
+      if (data.guesses.length > 0 && data.correct){
         onCorrectGuess();
       }
-    })
-    .catch(error => {
-      console.error('Error fetching comparison result:', error);
-    });
+    };
+    
+    fetchData();
   }, [guessedWord]);
 
   return (
-    <div className="Game">
+    <div>
       <ul>
         {guesses.map((result, index) => (
           <li key={index}>

@@ -1,10 +1,16 @@
 import express from 'express';
 import fs from 'fs/promises';
-import compareWords from './compareWords.js';
-import chooseWord from './chooseWord.js';
 import mongoose from 'mongoose';
 import ejs from 'ejs';
+import * as uuid from 'uuid';
+
 import { HighScore } from './models.js';
+import compareWords from './compareWords.js';
+import chooseWord from './chooseWord.js';
+import wordList from './wordList.js';
+import correctWord from './correctWord.js';
+
+const GAMES = [];
 
 mongoose.connect(process.env.DB_URL || 'mongodb://localhost:27017/test');
 
@@ -35,27 +41,52 @@ app.get('/info', (req, res) => {});
 
 // API Routes
 
-app.post('/api/compare', (req, res) => {
-  const { guess, correctWord } = req.body;
+app.post('/api/games', async (req, res) => {
+  const wordLength = parseInt(req.query.wordLength);
+  const uniqueLetters = req.query.uniqueLetters === 'true';
+  const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
+  const wordArray = wordList.split('\r\n');
 
-  const comparisonResult = compareWords(guess, correctWord);
+  const game = {
+    correctWord: chooseWord(wordArray, wordLength, uniqueLetters),
+    guesses: [],
+    id: uuid.v4(),
+    startTime: new Date(),
+  };
 
-  res.json({ result: comparisonResult });
+  console.log(game); // remove this after development <--------------------
+
+  GAMES.push(game);
+  res.status(201).json({ id: game.id });
 });
 
-app.get('/api/choose-word', async (req, res) => {
-  const { wordLength, uniqueLetters } = req.query;
+app.post('/api/games/:id/guesses', (req, res) => {
+  const game = GAMES.find((savedGame) => savedGame.id == req.params.id);
+  if (game) {
+    const guess = req.body.guess;
+    const compare = compareWords(guess, game.correctWord);
+    game.guesses.push(guess);
 
-  try {
-    const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
-    const wordArray = wordList.split('\r\n');
+    const correct = correctWord(compare);
 
-    const word = chooseWord({ wordArray, wordLength: parseInt(wordLength), uniqueLetters: uniqueLetters === 'true' });
+    if (correct && compare.length > 0) {
+      game.endTime = new Date();
 
-    res.json({ word });
-  } catch (error) {
-    console.error('Error reading word list file:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+      res.status(201).json({
+        guesses: game.guesses,
+        result: game,
+        correct: true,
+        correctWord: compare,
+      });
+    } else {
+      res.status(201).json({
+        guesses: game.guesses,
+        correct: false,
+        correctWord: compare,
+      });
+    }
+  } else {
+    res.status(404).end();
   }
 });
 
