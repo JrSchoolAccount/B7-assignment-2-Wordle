@@ -7,7 +7,6 @@ import * as uuid from 'uuid';
 import { HighScore } from './models.js';
 import compareWords from './compareWords.js';
 import chooseWord from './chooseWord.js';
-import wordList from './wordList.js';
 import correctWord from './correctWord.js';
 
 const GAMES = [];
@@ -21,7 +20,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 app.use((req, res, next) => {
-  console.log(req.method, req.path);
+  console.log(req.method, req.path); // Remove after DEV <------------------
   next();
 });
 
@@ -112,5 +111,6 @@ app.post('/api/games/:id/high-score', async (req, res) => {
 });
 
 app.use('/assets', express.static('../frontend/dist/assets'));
+app.use('/static', express.static('./static'));
 
 export default app;
