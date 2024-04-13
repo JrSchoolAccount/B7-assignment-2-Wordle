@@ -80,6 +80,7 @@ app.post('/api/games/:id/guesses', (req, res) => {
         correct: true,
         wordArray: compare,
       });
+      console.log(game);
     } else {
       res.status(201).json({
         guesses: game.guesses,
@@ -96,13 +97,9 @@ app.post('/api/games/:id/high-score', async (req, res) => {
   const game = GAMES.find((savedGame) => savedGame.id === req.params.id);
   if (game) {
     const name = req.body.name;
-    const guesses = game.guesses.length - 1;
-    const { wordLength, unique } = game;
     const highScore = new HighScore({
+      ...game,
       name,
-      guesses,
-      wordLength,
-      unique,
     });
     await highScore.save();
 
@@ -112,12 +109,6 @@ app.post('/api/games/:id/high-score', async (req, res) => {
   } else {
     res.status(404).json(404).end();
   }
-});
-
-app.get('/api/high-score', async (req, res) => {
-  const highScores = await HighScore.find();
-
-  res.json({ highScores });
 });
 
 app.use('/assets', express.static('../frontend/dist/assets'));
