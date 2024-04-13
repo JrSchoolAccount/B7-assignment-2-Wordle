@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
-export default function InputWord({ onGuessWord, wordLength }) {
+export default function Input({ onSubmitInput, wordLength }) {
     const [text, setText] = useState('');
+    
     return (
     <div className='m-5 w-1/2 md:w-64 mx-auto '>
         <form onSubmit={(ev) => {
             ev.preventDefault();
-            
-            onGuessWord(text);
+            onSubmitInput(text);
         }}>
       <input
       minLength={wordLength}

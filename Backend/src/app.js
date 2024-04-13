@@ -49,6 +49,8 @@ app.post('/api/games', async (req, res) => {
 
   const game = {
     correctWord: chooseWord(wordArray, wordLength, uniqueLetters),
+    wordLength: wordLength,
+    unique: uniqueLetters,
     guesses: [],
     id: uuid.v4(),
     startTime: new Date(),
@@ -76,13 +78,14 @@ app.post('/api/games/:id/guesses', (req, res) => {
         guesses: game.guesses,
         result: game,
         correct: true,
-        correctWord: compare,
+        wordArray: compare,
       });
+      console.log(game);
     } else {
       res.status(201).json({
         guesses: game.guesses,
         correct: false,
-        correctWord: compare,
+        wordArray: compare,
       });
     }
   } else {
@@ -90,13 +93,23 @@ app.post('/api/games/:id/guesses', (req, res) => {
   }
 });
 
-app.get('/api/high-score', async (req, res) => {
-  const highScores = await HighScore.find();
+app.post('/api/games/:id/high-score', async (req, res) => {
+  const game = GAMES.find((savedGame) => savedGame.id === req.params.id);
+  if (game) {
+    const name = req.body.name;
+    const highScore = new HighScore({
+      ...game,
+      name,
+    });
+    await highScore.save();
 
-  res.json({ highScores });
+    console.log(highScore); // remove after development <--------
+
+    res.status(201).json(highScore);
+  } else {
+    res.status(404).json(404).end();
+  }
 });
-
-app.post('/api/high-score', (req, res) => {});
 
 app.use('/assets', express.static('../frontend/dist/assets'));
 

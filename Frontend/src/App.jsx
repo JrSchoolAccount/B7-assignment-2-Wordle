@@ -1,18 +1,21 @@
 import { useState } from 'react'
 import './App.css'
-import InputWord from './components/InputWord';
-import WordAnswer from './components/WordAnswer';
+import Game from './components/Game';
 import StartScreen from './components/StartScreen';
+import Input from './components/Input';
 
 function App() {
-  const [ word, setWord ] = useState('');
-  const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
-  const [ wordLength, setWordLength ] = useState(5);
-  const [ gameState, setGameState ] = useState('');
   const [ gameId, setGameId ] = useState(null);
+  const [ gameState, setGameState ] = useState('notPlaying');
+  const [ guesses, setGuesses ] = useState([]);
+  const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
+  const [ name, setName ] = useState('')
+  const [ result, setResult ] = useState(null)
+  const [ word, setWord ] = useState('');
+  const [ wordLength, setWordLength ] = useState(5);
 
-  function handleGuess(newGuess) {
-  setWord(newGuess);
+  function handleInput(text) {
+  setWord(text);
   }
 
   const handleStartGame = async (length, doubleLetters) => {
@@ -20,7 +23,7 @@ function App() {
     setDoubleLetters(doubleLetters);
 
     try {
-      const res = await fetch(`/api/games?wordLength=${length}&uniqueLetters=${doubleLetters}`, {
+      const res = await fetch(`/api/games?wordLength=${wordLength}&uniqueLetters=${includeDoubleLetters}`, {
         method: "post",
       });
       const data = await res.json();
@@ -33,13 +36,33 @@ function App() {
     }
   };
 
-const handleGameWon = () => {
+  const handleSubmit = async (ev) => {
+    ev.preventDefault();
+
+    const highscore = {
+      name,
+    };
+
+    await fetch(`http://localhost:5080/api/games/${gameId}/high-score`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(highscore),
+    });
+
+    setGameState('notPlaying');
+  };
+
+const handleGameWon = (result, guesses) => {
+    setResult(result);
+    setGuesses(guesses);
     setGameState('won');
 };
 
   return (
     <div className='bg-black min-h-screen text-white'>
-      {gameState === '' ? (
+      {gameState === 'notPlaying' ? (
         <StartScreen
         onStartGame={handleStartGame}
         setWordLength={setWordLength} />
@@ -47,29 +70,35 @@ const handleGameWon = () => {
         <>
           {gameState === 'playing' && (
             <>
-              <InputWord onGuessWord={handleGuess} wordLength={wordLength} />
+            <Input wordLength={wordLength} onSubmitInput={handleInput} />
+            {word !== '' && (
               <div className='flex justify-center'>
-                <WordAnswer guessedWord={word} gameId={gameId} onCorrectGuess={handleGameWon} />
+                <Game
+                  guessedWord={word}
+                  gameId={gameId}
+                  onCorrectGuess={handleGameWon}
+                />
               </div>
-            </>
-          )}
-          {gameState === 'won' && (
-            <div>
-              <h1>You won!</h1>
-              <p>The correct word was </p>
-              <p>Guesses: </p>
-              <p>Duration: </p>
-              <h2>Add to highscore</h2>
-              <form>
-                <input placeholder='Your name' />
+            )}
+          </>
+        )}
+        {gameState === 'won' && (
+          <>
+          <h1>You won!</h1>
+              <p>The correct word: {guesses.at(-1)}</p>
+              <p>Guesses: {guesses.length}</p>
+              <p>Time: {(new Date(result.endTime) - new Date(result.startTime)) / 1000}s</p>
+              <h2>Add to High-Score</h2>
+              <form onSubmit={handleSubmit}>
+                <input value={name} onChange={(ev) => setName(ev.target.value)} placeholder='Your name' />
                 <input type='submit' />
               </form>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
+          </>
+        )}
+      </>
+    )}
+  </div>
+);
 }
 
 export default App

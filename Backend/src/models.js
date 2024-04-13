@@ -2,8 +2,9 @@ import mongoose from 'mongoose';
 
 const HighScore = mongoose.model('HighScore', {
   name: String,
-  time: Number,
-  guesses: Number,
+  startTime: Date,
+  endTime: Date,
+  guesses: Array,
   wordLength: Number,
   unique: Boolean,
 });
