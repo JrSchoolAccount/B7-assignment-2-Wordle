@@ -18,7 +18,7 @@ function App() {
   setWord(text);
   }
 
-  const handleStartGame = async (length, doubleLetters) => {
+  const handleStartGame = async (length, doubleLetters) => {    
     setWordLength(length);
     setDoubleLetters(doubleLetters);
 
@@ -52,11 +52,11 @@ function App() {
     });
 
     setGameState('notPlaying');
+    setGuesses([]);
   };
 
 const handleGameWon = (result, guesses) => {
     setResult(result);
-    setGuesses(guesses);
     setGameState('won');
 };
 
@@ -74,8 +74,10 @@ const handleGameWon = (result, guesses) => {
             {word !== '' && (
               <div className='flex justify-center'>
                 <Game
-                  guessedWord={word}
                   gameId={gameId}
+                  guessedWord={word}
+                  setGuesses={setGuesses}
+                  
                   onCorrectGuess={handleGameWon}
                 />
               </div>

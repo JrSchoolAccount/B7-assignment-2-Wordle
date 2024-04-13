@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Game({ guessedWord , gameId, onCorrectGuess }) {
-  const [ guesses, setGuesses ] = useState([]);
+export default function Game({ guessedWord , gameId, setGuesses, onCorrectGuess }) {
   const [ wordArray, setWordArray ] = useState([]);
 
   useEffect( () => {
@@ -20,9 +19,10 @@ export default function Game({ guessedWord , gameId, onCorrectGuess }) {
       setGuesses(data.guesses);
       
       if (data.guesses.length > 0 && data.correct){
-
         const result = data.result;
-        onCorrectGuess(result, guesses);
+
+        onCorrectGuess(result);
+        setWordArray([]);
       }
     };
     
