@@ -64,7 +64,7 @@ const handleGameWon = (result, guesses) => {
   return (
     <div className='bg-black min-h-screen text-white'>
       <Navbar/>
-      {gameState === 'notPlaying' ? (
+      {gameState === 'noPlaying' ? (
         <StartScreen
         onStartGame={handleStartGame}
         setWordLength={setWordLength} />
@@ -86,18 +86,18 @@ const handleGameWon = (result, guesses) => {
             )}
           </>
         )}
-        {gameState === 'won' && (
-          <>
-          <h1>You won!</h1>
-              <p>The correct word: {guesses.at(-1)}</p>
-              <p>Guesses: {guesses.length}</p>
-              <p>Time: {(new Date(result.endTime) - new Date(result.startTime)) / 1000}s</p>
-              <h2>Add to High-Score</h2>
+        {gameState === 'notPlaying' && (
+          <div className='flex-col items-center m-5 w-1/2 md:w-64 mx-auto'>
+          <h1 className='text-center text-4xl font-bold mb-2'>You won!</h1>
+              <p className='text-center text-xl'>Correct word: fuck</p>
+              <p className='text-center text-xl'>Guesses: 2</p>
+              <p className='text-center text-xl'>Time: 6.456s</p>
+              <h2 className='text-center text-2xl mt-10 mb-2'>Add to High-Score</h2>
               <form onSubmit={handleSubmit}>
-                <input value={name} onChange={(ev) => setName(ev.target.value)} placeholder='Your name' />
-                <input type='submit' />
+                <input className='w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full mt-2' type='text' value={name} onChange={(ev) => setName(ev.target.value)} placeholder='Your name' />
+                <input className='w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full mt-2' type='submit' />
               </form>
-          </>
+          </div>
         )}
       </>
     )}
