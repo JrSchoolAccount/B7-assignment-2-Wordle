@@ -3,6 +3,7 @@ import './App.css'
 import Game from './components/Game';
 import StartScreen from './components/StartScreen';
 import Input from './components/Input';
+import Navbar from './components/Navbar';
 
 function App() {
   const [ gameId, setGameId ] = useState(null);
@@ -62,6 +63,7 @@ const handleGameWon = (result, guesses) => {
 
   return (
     <div className='bg-black min-h-screen text-white'>
+      <Navbar/>
       {gameState === 'notPlaying' ? (
         <StartScreen
         onStartGame={handleStartGame}

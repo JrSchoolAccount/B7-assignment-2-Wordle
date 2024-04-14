@@ -1,1 +1,25 @@
+<div class="bg-white shadow-md rounded-md overflow-hidden max-w-lg mx-auto mt-16 mb-16">
+  <div class="bg-gray-200 py-2 px-4">
+    <h2 class="text-xl font-semibold text-gray-800">Top Players</h2>
+  </div>
 
+  <% highScores.sort((a, b) => (a.endTime - a.startTime) - (b.endTime - b.startTime)); %>
+
+  <ul class="divide-y divide-gray-200">
+    <% highScores.forEach((highScore, index) => { %>
+
+    <li class="flex items-center py-4 px-6">
+      <span class="text-gray-700 text-lg font-medium mr-4"><%= index + 1 %>.</span>
+      <img class="w-12 h-12 rounded-full object-cover mr-4" src="../static/assets/image.png" alt="User avatar" />
+      <div class="flex-1">
+        <h3 class="text-lg font-medium text-gray-800"><%= highScore.name %></h3>
+        <p class="text-gray-600 text-base">Guesses: <%= highScore.guesses.length %></p>
+        <p class="text-gray-600 text-base">Time: <%= (highScore.endTime - highScore.startTime) / 1000 %>s</p>
+        <p class="text-gray-600 text-base">Word Length: <%= highScore.wordLength %></p>
+        <p class="text-gray-600 text-base">Unique: <%= highScore.unique %></p>
+      </div>
+    </li>
+
+    <% }) %>
+  </ul>
+</div>
