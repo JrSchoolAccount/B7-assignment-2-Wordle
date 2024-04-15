@@ -36,7 +36,11 @@ app.get('/high-score', async (req, res) => {
   res.render('layout', { highScores });
 });
 
-app.get('/info', (req, res) => {});
+app.get('/about', async (req, res) => {
+  const html = await fs.readFile('./static/about.html');
+
+  res.type('html').send(html);
+});
 
 // API Routes
 
