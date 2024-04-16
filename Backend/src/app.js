@@ -19,11 +19,6 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-app.use((req, res, next) => {
-  console.log(req.method, req.path); // Remove after DEV <------------------
-  next();
-});
-
 app.get('/', async (req, res) => {
   const html = await fs.readFile('../frontend/dist/index.html');
 
@@ -60,8 +55,6 @@ app.post('/api/games', async (req, res) => {
       id: uuid.v4(),
       startTime: new Date(),
     };
-
-    console.log(game); // remove this after development <--------------------
 
     GAMES.push(game);
     res.status(201).json({ id: game.id });
@@ -110,8 +103,6 @@ app.post('/api/games/:id/high-score', async (req, res) => {
       name,
     });
     await highScore.save();
-
-    console.log(highScore); // remove after development <--------
 
     res.status(201).json(highScore);
   } else {
