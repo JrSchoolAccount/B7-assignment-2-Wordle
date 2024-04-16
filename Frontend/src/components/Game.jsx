@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Game({ guessedWord , gameId, setGuesses, onCorrectGuess }) {
-  const [ wordArray, setWordArray ] = useState([]);
+export default function Game({ guessedWord , gameId, setGuesses, onCorrectGuess, wordArr, setWordArr }) {
 
   useEffect( () => {
     const fetchData = async () => {
@@ -15,14 +14,13 @@ export default function Game({ guessedWord , gameId, setGuesses, onCorrectGuess 
 
       const data = await res.json();
       
-      setWordArray(prevGuess => [data.wordArray, ...prevGuess]);
+      setWordArr(prevGuess => [data.wordArray, ...prevGuess]);
       setGuesses(data.guesses);
       
       if (data.guesses.length > 0 && data.correct){
         const result = data.result;
 
         onCorrectGuess(result);
-        setWordArray([]);
       }
     };
     
@@ -32,7 +30,7 @@ export default function Game({ guessedWord , gameId, setGuesses, onCorrectGuess 
   return (
         <div>
           <ul>
-            {wordArray.map((result, index) => (
+            {wordArr.map((result, index) => (
               <li key={index}>
                 <div className="flex flex-row">
                   {result.map((item, i) => (

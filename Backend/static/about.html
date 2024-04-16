@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>About</title>
+  </head>
+  <body class="bg-black text-white">
+    <nav class="relative select-none lg:flex lg:items-stretch w-full mb-5">
+      <div class="flex flex-no-shrink items-stretch h-12">
+        <a href="/"><img class="w-16 h-16 rounded-full mr-4 ml-1" src="./static/stockPhoto.png" alt="Logo" /></a>
+        <a
+          href="/about"
+          class="flex-no-grow flex-no-shrink relative py-2 px-4 leading-normal text-white no-underline flex items-center hover:bg-gray-200 hover:text-black"
+          >About</a
+        >
+        <a
+          href="/high-score"
+          class="flex-no-grow flex-no-shrink relative py-2 px-4 leading-normal text-white no-underline flex items-center hover:bg-gray-200 hover:text-black"
+          >High-Score</a
+        >
+      </div>
+    </nav>
+      <div class="grid-flow-row m-5 w-1/2 md:w-2/3 mx-auto">
+        <div
+          class="my-3 block max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Wordle-Clone project</h5>
+          <p class="font-normal text-white dark:text-white">
+            Fullstack project with frontend, backend and database support.
+          </p>
+          </p>
+        </div>
+        <div
+          class="my-3 block max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Frontend:</h5>
+          <p class="font-normal text-white dark:text-white">
+            Frontend is developed with React using jsx, styled with Tailwind and bundled with Vite.
+          </p>
+          </p>
+        </div>
+        <div
+          class="my-3 block max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Backend:</h5>
+          <p class="font-normal text-white dark:text-white">
+            The backend run on nodejs using express with ejs view engine for SSR and mongoose to interact with the database.
+          </p>
+          </p>
+        </div>
+        <div
+          class="my-3 block max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+        >
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Database:</h5>
+          <p class="font-normal text-white dark:text-white">
+            The database used for this project is mongoDB, both database on localhost and on mongoDB Atlas are supported.
+          </p>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

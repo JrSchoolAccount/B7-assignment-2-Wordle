@@ -19,11 +19,6 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
-app.use((req, res, next) => {
-  console.log(req.method, req.path); // Remove after DEV <------------------
-  next();
-});
-
 app.get('/', async (req, res) => {
   const html = await fs.readFile('../frontend/dist/index.html');
 
@@ -36,7 +31,11 @@ app.get('/high-score', async (req, res) => {
   res.render('layout', { highScores });
 });
 
-app.get('/info', (req, res) => {});
+app.get('/about', async (req, res) => {
+  const html = await fs.readFile('./static/about.html');
+
+  res.type('html').send(html);
+});
 
 // API Routes
 
@@ -44,21 +43,24 @@ app.post('/api/games', async (req, res) => {
   const wordLength = parseInt(req.query.wordLength);
   const uniqueLetters = req.query.uniqueLetters === 'true';
   const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
-  const wordArray = wordList.split('\r\n');
+  const wordArray = wordList.split('\n').map((word) => word.trim());
+  const correctWords = chooseWord(wordArray, wordLength, uniqueLetters);
 
-  const game = {
-    correctWord: chooseWord(wordArray, wordLength, uniqueLetters),
-    wordLength: wordLength,
-    unique: uniqueLetters,
-    guesses: [],
-    id: uuid.v4(),
-    startTime: new Date(),
-  };
+  if (chooseWord(wordArray, wordLength, uniqueLetters !== 'No word available, try again')) {
+    const game = {
+      correctWord: correctWords,
+      wordLength: wordLength,
+      unique: uniqueLetters,
+      guesses: [],
+      id: uuid.v4(),
+      startTime: new Date(),
+    };
 
-  console.log(game); // remove this after development <--------------------
+    GAMES.push(game);
+    res.status(201).json({ id: game.id });
+  }
 
-  GAMES.push(game);
-  res.status(201).json({ id: game.id });
+  res.status(404);
 });
 
 app.post('/api/games/:id/guesses', (req, res) => {
@@ -101,8 +103,6 @@ app.post('/api/games/:id/high-score', async (req, res) => {
       name,
     });
     await highScore.save();
-
-    console.log(highScore); // remove after development <--------
 
     res.status(201).json(highScore);
   } else {
