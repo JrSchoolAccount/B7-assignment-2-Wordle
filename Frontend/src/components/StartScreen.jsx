@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
-export default function StartScreen({ onStartGame }) {
-  const [wordLength, setWordLength] = useState(3);
-  const [includeDoubleLetters, setIncludeDoubleLetters] = useState(false);
+export default function StartScreen({ onStartGame, wordLength, includeDoubleLetters, setWordLength, setIncludeDoubleLetters }) {
 
   const handleStart = (e) => {
     e.preventDefault();
-    onStartGame(wordLength, includeDoubleLetters);
+    onStartGame();
   };
 
   return (

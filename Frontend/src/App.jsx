@@ -4,34 +4,38 @@ import Game from './components/Game';
 import StartScreen from './components/StartScreen';
 import Input from './components/Input';
 import Navbar from './components/Navbar';
+import Logo from './components/Logo';
 
 function App() {
   const [ gameId, setGameId ] = useState(null);
   const [ gameState, setGameState ] = useState('notPlaying');
   const [ guesses, setGuesses ] = useState([]);
-  const [ includeDoubleLetters, setDoubleLetters ] = useState(false);
+  const [ includeDoubleLetters, setIncludeDoubleLetters ] = useState(false);
   const [ name, setName ] = useState('')
   const [ result, setResult ] = useState(null)
   const [ word, setWord ] = useState('');
+  const [ wordArr, setWordArr ] = useState([]);
   const [ wordLength, setWordLength ] = useState(5);
 
   function handleInput(text) {
   setWord(text);
   }
 
-  const handleStartGame = async (length, doubleLetters) => {    
-    setWordLength(length);
-    setDoubleLetters(doubleLetters);
+  const handleStartGame = async () => {    
+
 
     try {
       const res = await fetch(`/api/games?wordLength=${wordLength}&uniqueLetters=${includeDoubleLetters}`, {
         method: "post",
       });
+      if (res === 404){
+        alert('No word available, please try again')
+      } else {
       const data = await res.json();
       setGameId(data.id);
       
       setGameState('playing');
-
+      }
     } catch (error) {
       console.error('Error starting game:', error);
     }
@@ -53,21 +57,24 @@ function App() {
     });
 
     setGameState('notPlaying');
-    setGuesses([]);
   };
 
-const handleGameWon = (result, guesses) => {
+const handleGameWon = (result) => {
     setResult(result);
     setGameState('won');
 };
 
   return (
     <div className='bg-black min-h-screen text-white'>
-      <Navbar/>
+      <Navbar />
+      <Logo />
       {gameState === 'notPlaying' ? (
         <StartScreen
-        onStartGame={handleStartGame}
-        setWordLength={setWordLength} />
+          onStartGame={handleStartGame}
+          wordLength={wordLength}
+          includeDoubleLetters={includeDoubleLetters}
+          setWordLength={setWordLength}
+          setIncludeDoubleLetters={setIncludeDoubleLetters} />
       ) : (
         <>
           {gameState === 'playing' && (
@@ -79,6 +86,8 @@ const handleGameWon = (result, guesses) => {
                   gameId={gameId}
                   guessedWord={word}
                   setGuesses={setGuesses}
+                  wordArr={wordArr}
+                  setWordArr={setWordArr} 
                   
                   onCorrectGuess={handleGameWon}
                 />

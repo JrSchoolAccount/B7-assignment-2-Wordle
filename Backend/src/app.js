@@ -48,21 +48,26 @@ app.post('/api/games', async (req, res) => {
   const wordLength = parseInt(req.query.wordLength);
   const uniqueLetters = req.query.uniqueLetters === 'true';
   const wordList = await fs.readFile('./src/wordList.txt', 'utf8');
-  const wordArray = wordList.split('\r\n');
+  const wordArray = wordList.split('\n').map((word) => word.trim());
+  const correctWords = chooseWord(wordArray, wordLength, uniqueLetters);
 
-  const game = {
-    correctWord: chooseWord(wordArray, wordLength, uniqueLetters),
-    wordLength: wordLength,
-    unique: uniqueLetters,
-    guesses: [],
-    id: uuid.v4(),
-    startTime: new Date(),
-  };
+  if (chooseWord(wordArray, wordLength, uniqueLetters !== 'No word available, try again')) {
+    const game = {
+      correctWord: correctWords,
+      wordLength: wordLength,
+      unique: uniqueLetters,
+      guesses: [],
+      id: uuid.v4(),
+      startTime: new Date(),
+    };
 
-  console.log(game); // remove this after development <--------------------
+    console.log(game); // remove this after development <--------------------
 
-  GAMES.push(game);
-  res.status(201).json({ id: game.id });
+    GAMES.push(game);
+    res.status(201).json({ id: game.id });
+  }
+
+  res.status(404);
 });
 
 app.post('/api/games/:id/guesses', (req, res) => {
