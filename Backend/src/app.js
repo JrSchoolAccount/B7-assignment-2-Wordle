@@ -81,7 +81,6 @@ app.post('/api/games/:id/guesses', (req, res) => {
         correct: true,
         wordArray: compare,
       });
-      console.log(game);
     } else {
       res.status(201).json({
         guesses: game.guesses,
