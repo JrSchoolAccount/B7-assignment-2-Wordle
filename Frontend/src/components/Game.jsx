@@ -1,31 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-export default function Game({ guessedWord , gameId, setGuesses, onCorrectGuess, wordArr, setWordArr }) {
-
-  useEffect( () => {
-    const fetchData = async () => {
-      const res = await fetch(`/api/games/${gameId}/guesses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({guess: guessedWord})
-      });
-
-      const data = await res.json();
-      
-      setWordArr(prevGuess => [data.wordArray, ...prevGuess]);
-      setGuesses(data.guesses);
-      
-      if (data.guesses.length > 0 && data.correct){
-        const result = data.result;
-
-        onCorrectGuess(result);
-      }
-    };
-    
-    fetchData();
-  }, [guessedWord]);
+export default function Game({ wordArr }) {
 
   return (
         <div>

@@ -17,10 +17,30 @@ function App() {
   const [ wordArr, setWordArr ] = useState([]);
   const [ wordLength, setWordLength ] = useState(5);
 
-  function handleInput(text) {
-  setWord(text);
-  }
+  const handleInput = async (word) => {
+  setWord(word);
+  
+    const res = await fetch(`/api/games/${gameId}/guesses`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({guess: word})
+    });
 
+    const data = await res.json();
+    
+    setWordArr(prevGuess => [data.wordArray, ...prevGuess]);
+    setGuesses(data.guesses);
+    
+    if (data.guesses.length > 0 && data.correct){
+      const wordResult = data.result;
+
+      handleGameWon(wordResult);
+    }
+
+  };
+  
   const handleStartGame = async () => {    
 
 
@@ -61,6 +81,8 @@ function App() {
 
 const handleGameWon = (result) => {
     setResult(result);
+    setGuesses([]);
+    setWordArr([]);
     setGameState('won');
 };
 
@@ -82,15 +104,7 @@ const handleGameWon = (result) => {
             <Input wordLength={wordLength} onSubmitInput={handleInput} />
             {word !== '' && (
               <div className='flex justify-center'>
-                <Game
-                  gameId={gameId}
-                  guessedWord={word}
-                  setGuesses={setGuesses}
-                  wordArr={wordArr}
-                  setWordArr={setWordArr} 
-                  
-                  onCorrectGuess={handleGameWon}
-                />
+                <Game wordArr={wordArr} />
               </div>
             )}
           </>
